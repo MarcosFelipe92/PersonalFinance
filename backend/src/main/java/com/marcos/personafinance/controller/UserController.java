@@ -13,37 +13,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.marcos.personafinance.dto.AccountDTO;
-import com.marcos.personafinance.service.AccountService;
+import com.marcos.personafinance.dto.UserDTO;
+import com.marcos.personafinance.service.UserService;
 
 @RestController
-@RequestMapping("/accounts")
-public class AccountController {
+@RequestMapping("/users")
+public class UserController {
 
     @Autowired
-    private AccountService service;
+    private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> findAll() {
-        List<AccountDTO> list = service.findAll();
+    public ResponseEntity<List<UserDTO>> findAll() {
+        List<UserDTO> list = service.findAll();
         return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<AccountDTO> findById(@PathVariable Long id) {
-        AccountDTO obj = service.findById(id);
-        return ResponseEntity.ok().body(obj);
-    }
-
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<AccountDTO> update(@RequestBody AccountDTO dto, @PathVariable Long id) {
-        AccountDTO obj = service.update(dto, id);
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        UserDTO obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping
-    public ResponseEntity<AccountDTO> insert(@RequestBody AccountDTO dto) {
-        AccountDTO obj = service.insert(dto);
+    public ResponseEntity<UserDTO> insert(@RequestBody UserDTO dto) {
+        UserDTO obj = service.insert(dto);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto, @PathVariable Long id) {
+        UserDTO obj = service.update(dto, id);
         return ResponseEntity.ok().body(obj);
     }
 

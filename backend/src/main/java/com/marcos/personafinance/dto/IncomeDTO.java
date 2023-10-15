@@ -2,9 +2,9 @@ package com.marcos.personafinance.dto;
 
 import java.time.LocalDateTime;
 
-import com.marcos.personafinance.entities.Account;
-import com.marcos.personafinance.entities.Income;
-import com.marcos.personafinance.entities.enums.IncomeType;
+import com.marcos.personafinance.model.Account;
+import com.marcos.personafinance.model.Income;
+import com.marcos.personafinance.model.enums.IncomeType;
 
 import lombok.Data;
 

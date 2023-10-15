@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.marcos.personafinance.dto.IncomeDTO;
-import com.marcos.personafinance.entities.Account;
-import com.marcos.personafinance.entities.Income;
+import com.marcos.personafinance.model.Account;
+import com.marcos.personafinance.model.Income;
 import com.marcos.personafinance.repository.AccountRepository;
 import com.marcos.personafinance.repository.IncomeRepository;
 
@@ -16,7 +16,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class IncomeService {
-    
+
     @Autowired
     private IncomeRepository repository;
 
@@ -35,7 +35,6 @@ public class IncomeService {
     public IncomeDTO insert(IncomeDTO dto) {
         Account account = accountRepository.findById(dto.getAccount().getId()).get();
         Income entity = new Income();
-        dto.setAccount(account);
         dtoToEntity(dto, entity);
         entity.setAccount(account);
         entity = repository.save(entity);
@@ -46,20 +45,21 @@ public class IncomeService {
     public IncomeDTO update(IncomeDTO dto, Long id) {
         Income entity = repository.getReferenceById(id);
         Account account = entity.getAccount();
-        dto.setAccount(account);
         dtoToEntity(dto, entity);
         entity.setAccount(account);
         entity = repository.save(entity);
         return new IncomeDTO(entity);
     }
 
-     public Income dtoToEntity(IncomeDTO dto, Income entity) {
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    public void dtoToEntity(IncomeDTO dto, Income entity) {
         entity.setDescription(dto.getDescription());
         entity.setType(dto.getType());
         entity.setAmount(dto.getAmount());
         entity.setDate(dto.getDate());
         entity.setAccount(dto.getAccount());
-
-        return entity;
     }
 }

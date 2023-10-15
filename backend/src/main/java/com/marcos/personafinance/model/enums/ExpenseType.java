@@ -1,14 +1,14 @@
-package com.marcos.personafinance.entities.enums;
+package com.marcos.personafinance.model.enums;
 
 public enum ExpenseType {
-    ALIMENTACAO(1),
-    EDUCACAO(2),
-    LAZER(3),
-    SAUDE(4),
-    TRANSPORTE(5);
+	ALIMENTACAO(1),
+	EDUCACAO(2),
+	LAZER(3),
+	SAUDE(4),
+	TRANSPORTE(5);
 
-    private int code;
-	
+	private int code;
+
 	private ExpenseType(int code) {
 		this.code = code;
 	}
@@ -16,10 +16,10 @@ public enum ExpenseType {
 	public int getCode() {
 		return code;
 	}
-	
+
 	public static ExpenseType valueOf(int code) {
-		for(ExpenseType order : ExpenseType.values()) {
-			if(order.getCode() == code) {
+		for (ExpenseType order : ExpenseType.values()) {
+			if (order.getCode() == code) {
 				return order;
 			}
 		}

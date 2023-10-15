@@ -1,8 +1,8 @@
-package com.marcos.personafinance.entities;
+package com.marcos.personafinance.model;
 
 import java.time.LocalDateTime;
 
-import com.marcos.personafinance.entities.enums.IncomeType;
+import com.marcos.personafinance.model.enums.ExpenseType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,19 +10,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
-@Entity(name = "tb_income")
-public class Income {
-    
+@Entity
+@Table(name = "tb_expense")
+public class Expense {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String description;
-    private IncomeType type;
     private Double amount;
+    private ExpenseType type;
     private LocalDateTime date;
 
     @ManyToOne
