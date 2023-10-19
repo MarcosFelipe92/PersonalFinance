@@ -4,14 +4,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.marcos.personafinance.dto.IncomeDTO;
+import com.marcos.personafinance.exception.service.DatabaseException;
+import com.marcos.personafinance.exception.service.ResourceNotFoundException;
 import com.marcos.personafinance.model.Account;
 import com.marcos.personafinance.model.Income;
 import com.marcos.personafinance.repository.AccountRepository;
 import com.marcos.personafinance.repository.IncomeRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -28,7 +32,8 @@ public class IncomeService {
     }
 
     public IncomeDTO findById(Long id) {
-        return new IncomeDTO(repository.findById(id).get());
+        Income entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        return new IncomeDTO(entity);
     }
 
     @Transactional
@@ -43,16 +48,24 @@ public class IncomeService {
 
     @Transactional
     public IncomeDTO update(IncomeDTO dto, Long id) {
-        Income entity = repository.getReferenceById(id);
-        Account account = entity.getAccount();
-        dtoToEntity(dto, entity);
-        entity.setAccount(account);
-        entity = repository.save(entity);
-        return new IncomeDTO(entity);
+        try {
+            Income entity = repository.getReferenceById(id);
+            Account account = entity.getAccount();
+            dtoToEntity(dto, entity);
+            entity.setAccount(account);
+            entity = repository.save(entity);
+            return new IncomeDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("id " + id + " not found");
+        }
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
+        }
     }
 
     public void dtoToEntity(IncomeDTO dto, Income entity) {

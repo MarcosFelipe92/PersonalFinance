@@ -4,15 +4,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.marcos.personafinance.dto.RoleDTO;
 import com.marcos.personafinance.dto.UserDTO;
+import com.marcos.personafinance.exception.service.DatabaseException;
+import com.marcos.personafinance.exception.service.ResourceNotFoundException;
 import com.marcos.personafinance.model.Role;
 import com.marcos.personafinance.model.User;
 import com.marcos.personafinance.repository.RoleRepository;
 import com.marcos.personafinance.repository.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -29,7 +33,7 @@ public class UserService {
     }
 
     public UserDTO findById(Long id) {
-        User entity = repository.findById(id).get();
+        User entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return new UserDTO(entity, entity.getRoles());
     }
 
@@ -43,14 +47,22 @@ public class UserService {
 
     @Transactional
     public UserDTO update(UserDTO dto, Long id) {
-        User entity = repository.getReferenceById(id);
-        dtoToEntity(dto, entity);
-        entity = repository.save(entity);
-        return new UserDTO(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            dtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new UserDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("id " + id + " not found");
+        }
     }
 
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
+        }
     }
 
     public void dtoToEntity(UserDTO dto, User entity) {
