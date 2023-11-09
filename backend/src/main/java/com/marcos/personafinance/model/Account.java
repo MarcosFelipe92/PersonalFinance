@@ -26,6 +26,8 @@ public class Account {
 
     private Double balance;
 
+    private Long user;
+
     @JsonIgnore
     @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Expense> expenses = new ArrayList<>();
@@ -38,9 +40,10 @@ public class Account {
 
     }
 
-    public Account(Long id, Double balance) {
+    public Account(Long id, Double balance, Long user) {
         this.id = id;
         this.balance = balance;
+        this.user = user;
     }
 
     public void deposit(Double amount) {

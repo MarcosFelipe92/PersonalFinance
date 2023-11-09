@@ -14,6 +14,7 @@ public class AccountDTO {
 
     private Long id;
     private Double balance;
+    private Long user;
 
     private List<IncomeDTO> incomes = new ArrayList<>();
     private List<ExpenseDTO> expenses = new ArrayList<>();
@@ -25,6 +26,7 @@ public class AccountDTO {
     public AccountDTO(Account entity) {
         id = entity.getId();
         balance = entity.getBalance();
+        user = entity.getUser();
     }
 
     public AccountDTO(Account entity, List<Income> incomes, List<Expense> expenses) {

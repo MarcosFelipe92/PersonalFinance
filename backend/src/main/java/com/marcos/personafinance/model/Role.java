@@ -1,18 +1,16 @@
 package com.marcos.personafinance.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
+public enum Role {
+    ADMIN("admin"),
+    USER("user");
 
-@Data
-@Entity(name = "tb_role")
-public class Role {
+    private String role;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
+    Role(String role) {
+        this.role = role;
+    }
 
+    public String getRole() {
+        return role;
+    }
 }

@@ -48,6 +48,7 @@ public class AccountService {
     public AccountDTO insert(AccountDTO dto) {
         Account entity = new Account();
         entity.setBalance(dto.getBalance());
+        entity.setUser(dto.getUser());
         entity = repository.save(entity);
         return new AccountDTO(entity);
     }

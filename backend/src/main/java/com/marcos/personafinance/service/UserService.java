@@ -5,28 +5,27 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.marcos.personafinance.dto.RoleDTO;
 import com.marcos.personafinance.dto.UserDTO;
 import com.marcos.personafinance.exception.service.DatabaseException;
+import com.marcos.personafinance.exception.service.InvalidEmailException;
 import com.marcos.personafinance.exception.service.ResourceNotFoundException;
-import com.marcos.personafinance.model.Role;
 import com.marcos.personafinance.model.User;
-import com.marcos.personafinance.repository.RoleRepository;
 import com.marcos.personafinance.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     public List<UserDTO> findAll() {
         return repository.findAll().stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
@@ -34,13 +33,18 @@ public class UserService {
 
     public UserDTO findById(Long id) {
         User entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-        return new UserDTO(entity, entity.getRoles());
+        return new UserDTO(entity);
     }
 
     @Transactional
-    public UserDTO insert(UserDTO dto) {
+    public UserDTO register(UserDTO dto) {
+        // if (repository.findByEmail(dto.getEmail()) != null) {
+        // throw new InvalidEmailException("Email já cadastrado!");
+        // }
+        String encryptedpassword = new BCryptPasswordEncoder().encode(dto.getPassword());
         User entity = new User();
         dtoToEntity(dto, entity);
+        entity.setPassword(encryptedpassword);
         entity = repository.save(entity);
         return new UserDTO(entity);
     }
@@ -68,14 +72,20 @@ public class UserService {
     public void dtoToEntity(UserDTO dto, User entity) {
         entity.setCpf(dto.getCpf());
         entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
+        entity.setLogin(dto.getLogin());
         entity.setPassword(dto.getPassword());
         entity.setPhone(dto.getPhone());
+        entity.setRole(dto.getRole());
+    }
 
-        entity.getRoles().clear();
-        for (RoleDTO roleDto : dto.getRoles()) {
-            Role role = roleRepository.getReferenceById(roleDto.getId());
-            entity.getRoles().add(role);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findByLogin(username);
+    }
+
+    public void validationLogin(String login) {
+        if (this.repository.findByLogin(login) != null) {
+            throw new InvalidEmailException("Email já cadastrado!");
         }
     }
 }

@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.marcos.personafinance.dto.ResponseLoginDTO;
 import com.marcos.personafinance.dto.UserDTO;
+import com.marcos.personafinance.dto.UserLoginDTO;
+import com.marcos.personafinance.model.User;
+import com.marcos.personafinance.security.TokenService;
 import com.marcos.personafinance.service.UserService;
 
 @RestController
@@ -22,6 +29,12 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private TokenService tokenService;
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll() {
@@ -35,10 +48,21 @@ public class UserController {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PostMapping
-    public ResponseEntity<UserDTO> insert(@RequestBody UserDTO dto) {
-        UserDTO obj = service.insert(dto);
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO dto) {
+        service.validationLogin(dto.getLogin());
+        UserDTO obj = service.register(dto);
         return ResponseEntity.ok().body(obj);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseLoginDTO> login(@RequestBody UserLoginDTO data) {
+        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.getLogin(),
+                data.getPassword());
+        Authentication auth = authenticationManager.authenticate(usernamePassword);
+
+        String token = tokenService.genereteToken((User) auth.getPrincipal());
+        return ResponseEntity.ok().body(new ResponseLoginDTO(token));
     }
 
     @PutMapping(value = "/{id}")

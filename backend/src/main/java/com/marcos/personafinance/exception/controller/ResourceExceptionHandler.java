@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.marcos.personafinance.exception.service.DatabaseException;
+import com.marcos.personafinance.exception.service.InvalidEmailException;
 import com.marcos.personafinance.exception.service.ResourceNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +35,19 @@ public class ResourceExceptionHandler {
         err.setTimestamp(Instant.now());
         err.setStatus(status.value());
         err.setError("Database error");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<StandardError> invalidEmail(InvalidEmailException e,
+            HttpServletRequest request) {
+        StandardError err = new StandardError();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Email já cadastrado");
         err.setMessage(e.getMessage());
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(err);
