@@ -44,13 +44,18 @@ export default function FormLogin() {
       login,
       password,
     });
+   
     try {
       const result = await frontendApi.post("/auth/login", data);
+      
       const { token, error } = result.data as LoginResponseType;
+      const account = 
 
       if (token) {
         authContext.signIn(token);
-        router.push("/dashboard/pesquisa");
+        router.push("/dashboard/central");
+        console.log();
+        
       } else {
         const message = (
           <CustomAlert
@@ -98,7 +103,7 @@ export default function FormLogin() {
                 </FormItem>
               );
             }}
-          ></FormField>
+          />
           <FormField
             control={loginForm.control}
             name="password"
@@ -117,7 +122,7 @@ export default function FormLogin() {
                 </FormItem>
               );
             }}
-          ></FormField>
+          />
 
           <Button type="submit" className="bg-amber-500 hover:bg-amber-600">
             Entrar

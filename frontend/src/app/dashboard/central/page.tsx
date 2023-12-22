@@ -1,7 +1,7 @@
 import ActivityTable from "../components/ActivityTable";
 import InsertActivityForm from "../components/InsertActivityForm";
 
-export default function Expense() {
+export default function Central() {
   return (
     <div>
       <InsertActivityForm />

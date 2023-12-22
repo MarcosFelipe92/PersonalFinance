@@ -6,8 +6,6 @@ export default async function middleWare(request: NextRequest) {
   if (authToken) {
     const isTokenValid = await validationToken(authToken);
 
-    console.log(isTokenValid);
-
     if (isTokenValid) {
       return NextResponse.next();
     }
@@ -16,7 +14,7 @@ export default async function middleWare(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/pesquisa"],
+  matcher: ["/dashboard/central"],
 };
 
 type BackendValidateTokenResponseType = {

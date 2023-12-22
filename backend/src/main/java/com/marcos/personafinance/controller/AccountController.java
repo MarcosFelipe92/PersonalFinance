@@ -35,7 +35,13 @@ public class AccountController {
         return ResponseEntity.ok().body(obj);
     }
 
-    @PutMapping(value = "/{id}")
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<AccountDTO> findByUser(@PathVariable Long id) {
+        AccountDTO obj = service.findByUser(id);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @PutMapping(value = "/users/{id}")
     public ResponseEntity<AccountDTO> update(@RequestBody AccountDTO dto, @PathVariable Long id) {
         AccountDTO obj = service.update(dto, id);
         return ResponseEntity.ok().body(obj);

@@ -7,10 +7,6 @@ export type LoginResponseType = {
   error?: string;
 };
 
-type BackendLoginResponseType = {
-  token: string;
-};
-
 type BackendLoginErrorResponseType = {
   timestamp: string;
   status: number;
@@ -21,8 +17,6 @@ type BackendLoginErrorResponseType = {
 
 export async function POST(request: NextRequest) {
   const { login, password } = await request.json();
-
-  console.log(login, password);
 
   const data = JSON.stringify({ login, password });
 
