@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Data
@@ -27,10 +28,8 @@ public class User implements UserDetails {
     private String phone;
     private Role role;
 
-    // @ManyToMany(fetch = FetchType.EAGER)
-    // @JoinTable(name = "tb_user_role", joinColumns = @JoinColumn(name =
-    // "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    // private Set<Role> roles = new HashSet<>();
+    @OneToOne
+    private Account account;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

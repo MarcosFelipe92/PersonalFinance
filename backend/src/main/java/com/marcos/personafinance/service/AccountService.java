@@ -44,17 +44,10 @@ public class AccountService {
         return new AccountDTO(entity, entity.getIncomes(), entity.getExpenses());
     }
 
-    @Transactional(readOnly = true)
-    public AccountDTO findByUser(Long id) {
-        Account entity = repository.findByUser(id);
-        return new AccountDTO(entity, entity.getIncomes(), entity.getExpenses());
-    }
-
     @Transactional
     public AccountDTO insert(AccountDTO dto) {
         Account entity = new Account();
         entity.setBalance(dto.getBalance());
-        entity.setUser(dto.getUser());
         entity = repository.save(entity);
         return new AccountDTO(entity);
     }

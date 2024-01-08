@@ -26,8 +26,8 @@ export function AuthContextProvider({
     deleteCookie("money-manager.token");
   }
   function recoveryToken() {
-    const cookie = getCookie("money-manager.token");
-    const token = cookie?.toString();
+    const cookie = getCookie("money-manager.token")?.valueOf();
+    const token = cookie;
     return token;
   }
 

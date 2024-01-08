@@ -2,7 +2,7 @@ package com.marcos.personafinance.model;
 
 import java.time.LocalDateTime;
 
-import com.marcos.personafinance.model.enums.ExpenseType;
+import com.marcos.personafinance.model.enums.ActivityType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +24,7 @@ public class Expense {
 
     private String description;
     private Double amount;
-    private ExpenseType type;
+    private ActivityType type;
     private LocalDateTime date;
 
     @ManyToOne

@@ -15,7 +15,9 @@ import com.marcos.personafinance.dto.UserDTO;
 import com.marcos.personafinance.exception.service.DatabaseException;
 import com.marcos.personafinance.exception.service.InvalidEmailException;
 import com.marcos.personafinance.exception.service.ResourceNotFoundException;
+import com.marcos.personafinance.model.Account;
 import com.marcos.personafinance.model.User;
+import com.marcos.personafinance.repository.AccountRepository;
 import com.marcos.personafinance.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -26,6 +28,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     public List<UserDTO> findAll() {
         return repository.findAll().stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
@@ -41,9 +46,11 @@ public class UserService implements UserDetailsService {
         // if (repository.findByEmail(dto.getEmail()) != null) {
         // throw new InvalidEmailException("Email já cadastrado!");
         // }
+        Account account = accountRepository.findById(dto.getAccount().getId()).get();
         String encryptedpassword = new BCryptPasswordEncoder().encode(dto.getPassword());
         User entity = new User();
         dtoToEntity(dto, entity);
+        entity.setAccount(account);
         entity.setPassword(encryptedpassword);
         entity = repository.save(entity);
         return new UserDTO(entity);
@@ -53,7 +60,9 @@ public class UserService implements UserDetailsService {
     public UserDTO update(UserDTO dto, Long id) {
         try {
             User entity = repository.getReferenceById(id);
+            Account account = accountRepository.findById(entity.getAccount().getId()).get();
             dtoToEntity(dto, entity);
+            entity.setAccount(account);
             entity = repository.save(entity);
             return new UserDTO(entity);
         } catch (EntityNotFoundException e) {

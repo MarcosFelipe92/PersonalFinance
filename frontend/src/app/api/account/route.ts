@@ -1,6 +1,7 @@
 import { backendApi } from "@/lib/api";
 import { AxiosError } from "axios";
 import { NextRequest } from "next/server";
+import { string } from "zod";
 
 type BackendErrorResponseType = {
   timestamp: string;
@@ -10,24 +11,49 @@ type BackendErrorResponseType = {
   path: string;
 };
 
-export type AccountInsertType = {
-  balance: number;
-  user: number;
+export type Income = {
+  id: number;
+  description: string;
+  amount: number;
+  date: Date;
+  type: string;
+  Account: Account;
 };
 
-type AccountResponseType = {
+export type Expense = {
+  id: number;
+  description: string;
+  amount: number;
+  date: Date;
+  type: string;
+  Account: Account;
+};
+
+export type Account = {
+  id: number;
+  balance: number;
+  expenses: Expense[];
+  incomes: Income[];
+};
+
+export type AccountResponseType = {
+  id?: number;
   balance?: number;
-  user?: number;
   error?: string;
 };
 
 export async function POST(request: NextRequest) {
-  const { balance, user } = await request.json();
-  const data = JSON.stringify({ balance, user });
+  const authToken = request.cookies.get("money-manager.token")?.value;
+  const balance = await request.json();
+  const data = JSON.stringify(balance);
   let response: AccountResponseType;
 
   try {
-    const result = await backendApi.post("accounts", data);
+    const result = await backendApi.post("accounts", data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
     response = result.data;
   } catch (e) {
     const axiosError = e as AxiosError;

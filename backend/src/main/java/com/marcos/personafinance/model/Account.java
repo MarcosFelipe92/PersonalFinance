@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -26,10 +26,12 @@ public class Account {
 
     private Double balance;
 
-    private Long user;
+    @JsonIgnore
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account")
     private List<Expense> expenses = new ArrayList<>();
 
     @JsonIgnore
@@ -40,7 +42,7 @@ public class Account {
 
     }
 
-    public Account(Long id, Double balance, Long user) {
+    public Account(Long id, Double balance, User user) {
         this.id = id;
         this.balance = balance;
         this.user = user;

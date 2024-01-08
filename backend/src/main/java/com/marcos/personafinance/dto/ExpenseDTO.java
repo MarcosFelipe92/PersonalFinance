@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.marcos.personafinance.model.Account;
 import com.marcos.personafinance.model.Expense;
-import com.marcos.personafinance.model.enums.ExpenseType;
+import com.marcos.personafinance.model.enums.ActivityType;
 
 import lombok.Data;
 
@@ -14,7 +14,7 @@ public class ExpenseDTO {
     private Long id;
     private String description;
     private Double amount;
-    private ExpenseType type;
+    private ActivityType type;
     private LocalDateTime date;
     private Account account;
 

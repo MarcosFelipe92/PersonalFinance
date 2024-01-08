@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.marcos.personafinance.dto.ResponseTokenDTO;
 import com.marcos.personafinance.dto.TokenDTO;
+import com.marcos.personafinance.dto.UserDTO;
+import com.marcos.personafinance.model.User;
 import com.marcos.personafinance.repository.UserRepository;
 import com.marcos.personafinance.security.TokenService;
 
@@ -32,5 +34,13 @@ public class AuthController {
         } else {
             throw new RuntimeException();
         }
+    }
+
+    @PostMapping("/get")
+    public UserDTO getDataForToken(@RequestBody TokenDTO dto) {
+        String login = service.validateToken(dto.getToken());
+        UserDetails obj = repository.findByLogin(login);
+        User user = repository.findByPassword(obj.getPassword());
+        return new UserDTO(user);
     }
 }

@@ -1,5 +1,7 @@
 "use client";
+import { Account, AccountResponseType } from "@/app/api/account/route";
 import { LoginResponseType } from "@/app/api/auth/login/route";
+import { UserResponseType } from "@/app/api/users/route";
 import { CustomAlert, CustomAlertType } from "@/components/global/CustomAlert";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,18 +46,17 @@ export default function FormLogin() {
       login,
       password,
     });
-   
+
     try {
       const result = await frontendApi.post("/auth/login", data);
-      
       const { token, error } = result.data as LoginResponseType;
-      const account = 
+      const user = (await frontendApi.post("/auth/token", token))
+        .data as UserResponseType;
 
       if (token) {
         authContext.signIn(token);
         router.push("/dashboard/central");
-        console.log();
-        
+        console.log(user.account);
       } else {
         const message = (
           <CustomAlert

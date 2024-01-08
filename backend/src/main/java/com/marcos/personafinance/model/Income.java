@@ -2,7 +2,7 @@ package com.marcos.personafinance.model;
 
 import java.time.LocalDateTime;
 
-import com.marcos.personafinance.model.enums.IncomeType;
+import com.marcos.personafinance.model.enums.ActivityType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +21,7 @@ public class Income {
     private Long id;
 
     private String description;
-    private IncomeType type;
+    private ActivityType type;
     private Double amount;
     private LocalDateTime date;
 
