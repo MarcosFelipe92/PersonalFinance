@@ -65,7 +65,7 @@ public class UserController {
         return ResponseEntity.ok().body(new ResponseLoginDTO(token));
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/update/{id}")
     public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto, @PathVariable Long id) {
         UserDTO obj = service.update(dto, id);
         return ResponseEntity.ok().body(obj);

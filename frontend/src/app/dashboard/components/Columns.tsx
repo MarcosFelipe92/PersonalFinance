@@ -1,7 +1,6 @@
 "use client";
 
 import { ActivityType } from "@/app/api/activities/route";
-import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { RemoveButton } from "./RemoveButton";
 

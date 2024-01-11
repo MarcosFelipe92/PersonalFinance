@@ -43,10 +43,10 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public UserDTO register(UserDTO dto) {
-        // if (repository.findByEmail(dto.getEmail()) != null) {
-        // throw new InvalidEmailException("Email já cadastrado!");
-        // }
-        Account account = accountRepository.findById(dto.getAccount().getId()).get();
+        Account account = null;
+        if (dto.getAccount() != null) {
+            account = accountRepository.findById(dto.getAccount().getId()).get();
+        }
         String encryptedpassword = new BCryptPasswordEncoder().encode(dto.getPassword());
         User entity = new User();
         dtoToEntity(dto, entity);
@@ -60,7 +60,10 @@ public class UserService implements UserDetailsService {
     public UserDTO update(UserDTO dto, Long id) {
         try {
             User entity = repository.getReferenceById(id);
-            Account account = accountRepository.findById(entity.getAccount().getId()).get();
+            Account account = null;
+            if (dto.getAccount() != null) {
+                account = accountRepository.findById(dto.getAccount().getId()).get();
+            }
             dtoToEntity(dto, entity);
             entity.setAccount(account);
             entity = repository.save(entity);

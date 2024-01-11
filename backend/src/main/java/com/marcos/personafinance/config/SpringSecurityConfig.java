@@ -30,8 +30,9 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize.requestMatchers(HttpMethod.POST, "users/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "users/register").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "users/update").permitAll()
                                 .requestMatchers(HttpMethod.POST, "auth/get").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/accounts").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "accounts").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

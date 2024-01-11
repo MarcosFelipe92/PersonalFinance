@@ -56,7 +56,6 @@ export default function FormLogin() {
       if (token) {
         authContext.signIn(token);
         router.push("/dashboard/central");
-        console.log(user.account);
       } else {
         const message = (
           <CustomAlert

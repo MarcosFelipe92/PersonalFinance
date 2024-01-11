@@ -21,13 +21,13 @@ export type UserResponseType = {
   account: Account;
 };
 
-export async function POST(request: NextRequest) {
+export async function PUT(request: NextRequest) {
   const user = await request.json();
   const data = JSON.stringify(user);
   let response: UserResponseType;
 
   try {
-    const result = await backendApi.post("users/register", data);
+    const result = await backendApi.put("users", data);
     response = result.data;
   } catch (e) {
     const axiosError = e as AxiosError;
